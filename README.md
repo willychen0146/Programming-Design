@@ -23,8 +23,11 @@ sudo apt-get install g++
 ```sh
 # choose the file path you want to run
 cd {file_path}
+
 # simply run the code and enter the input.
 g++ {cpp_file_name}
+./a.out
+
 # you can also type the input into txt file and run:
-g++ {cpp_file_name} < {txt_file_name}
+./a.out < {txt_file_name}
 ```
