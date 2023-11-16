@@ -1,0 +1,2 @@
+./article.txt
+./dictionary2.txt
