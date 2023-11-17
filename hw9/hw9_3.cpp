@@ -4,15 +4,16 @@
 #include <fstream>
 using namespace std;
 
-void all_to_lower(string &str);
+// function
+void all_to_lower(string& str);
 int dic_word_counting(string target, string dic[], int dic_count);
 
 int main(){
-    // initiate the count
+    // initialize word count and dictionary count
     int word_count = -1;
     int dic_count = 0;
     
-    // get target path and dictionary path and open it as object
+    // get target path and dictionary path and open them as object
     string target_path = "";
     cin >> target_path;
     string dic_path = "";
@@ -21,23 +22,24 @@ int main(){
     ifstream dic_file(dic_path);
     string target = "";
 
+    // check if files are successfully opened
     if (target_file && dic_file){
-        // get target text
+        // get target text and make target text all to lower
         getline(target_file, target);
         all_to_lower(target);
-        // cout << target << endl;
 
-        // get dictionary in piece
+        // get dictionary in piece and make dictionary words all to lower
         dic_file >> dic_count;
         string* dic = new string[dic_count];
         for (int i = 0; i < dic_count; i++){
             dic_file >> dic[i];
             all_to_lower(dic[i]);
-            // cout << dic[i] << endl;
         }
 
+        // count occurrences of dictionary words in target text
         word_count = dic_word_counting(target, dic, dic_count);
 
+        // release memory allocated for dictionary
         delete[] dic;
     }
 
@@ -50,35 +52,36 @@ int main(){
     return 0;
 }
 
-void all_to_lower(string &str){
+// function: convert all characters in a string to lowercase
+void all_to_lower(string& str){
     for (int i = 0; i < str.length(); i++)
         str[i] = tolower(str[i]);
 }
 
-bool is_valid_word_char(char c) {
-    // Customize this function based on your requirements.
-    // For example, you might want to consider letters and numbers as valid characters.
-    return isalnum(c) || c == '_'; 
-}
-
+// function: count occurrences of dictionary words in target text
 int dic_word_counting(string target, string dic[], int dic_count){
+    // initiate count and location
     int count = 0;
     size_t position = 0;
 
+    // search the number of times a dictionary word appears in the target text
     for (int i = 0; i < dic_count; i++){
+        // start searching for one dictionary word
         position = target.find(dic[i], position);
-        while (position != string::npos) {
+        // search util the text is end
+        while (position != string::npos){
+            // if found, record the start and end location
             int start_pos = position;
             int end_pos = position + dic[i].length() - 1;
-            // Check if the substring is surrounded by punctuation or whitespace
+            // Check if the substring is surrounded by punctuation or space, not by other english word
             if ((start_pos == 0 || ispunct(target[start_pos - 1]) || isspace(target[start_pos - 1])) &&
-                (end_pos == target.length() - 1 || ispunct(target[end_pos + 1]) || isspace(target[end_pos + 1]))) {
+                (end_pos == target.length() - 1 || ispunct(target[end_pos + 1]) || isspace(target[end_pos + 1]))){
                 count++;
-                // cout << dic[i] << endl;
-                // cout << "Substring found at position: " << position << " to " << position + dic[i].length() - 1 << endl;
             }
+            // make the search position to the next position in the target text (next character)
             position = target.find(dic[i], position + 1);
         }
+        // reset the position to 0 if this round's seaching is end
         position = 0;
     }
 
